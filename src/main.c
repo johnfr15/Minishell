@@ -31,8 +31,10 @@ int main()
         if (prompt() == 0)
             continue;
         
-        shell.tokens = tokenization(shell.input);
-        exec_cmd(shell.tokens, shell.bin_path);
+        shell.table->tokens = tokenization(shell.input);
+        create_table(shell.table, shell.table->tokens, shell.table->ast);
+
+        // exec_cmd(shell.tokens, shell.bin_path);
     }
     return (EXIT_SUCCESS);
 }

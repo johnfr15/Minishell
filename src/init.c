@@ -40,6 +40,17 @@ static char **init_bin_path()
     return (path);
 }
 
+static t_table_cmd *init_table_cmd()
+{
+    t_table_cmd *table = (t_table_cmd *) malloc(sizeof(t_table_cmd));
+
+    table->tokens = NULL;
+    table->ast = new_cmd();
+    table->background = false;
+
+    return table;
+}
+
 void init(t_shell *shell)
 {
     shell->cwd = init_cwd();
@@ -47,6 +58,40 @@ void init(t_shell *shell)
     shell->hostname = init_hostname();
     shell->input = init_input();
     shell->history = init_history();
-    shell->bin_path = init_bin_path();
+    shell->bin_paths = init_bin_path();
+    shell->table = init_table_cmd();
     tcgetattr(STDIN_FILENO, shell->termios);
+}
+
+t_tokens    *new_token()
+{
+    t_tokens *token = (t_tokens *) malloc(sizeof(t_tokens));
+
+    if (token == NULL)
+        return (NULL);
+        
+    ft_memset(token, 0, sizeof(t_tokens));
+    token->arg = NULL;
+    token->next = NULL;
+
+    return (token);
+}
+
+t_cmd    *new_cmd()
+{
+    t_cmd *cmd = (t_cmd *) malloc(sizeof(t_cmd));
+
+    if (cmd == NULL)
+        return (NULL);
+
+    ft_memset(cmd, 0, sizeof(t_cmd));
+
+    cmd->args = NULL;
+    cmd->outputs = NULL;
+    cmd->inputs = NULL;
+    cmd->errs = NULL;
+    cmd->bin_path = NULL;
+    cmd->next = NULL;
+
+    return (cmd);
 }
