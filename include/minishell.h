@@ -22,9 +22,10 @@
 # include "termios.h"
 # include "termcap.h"
 # include "sys/wait.h"
+# include <sys/stat.h>
 # include "dirent.h"
 # include "libft.h"
-#include "tokens.h"
+# include "tokens.h"
 
 extern char **environ;
 
@@ -39,10 +40,15 @@ typedef struct  s_hist
 typedef struct  s_cmd
 {
     char            *bin_path;
-    t_list          *args;
+    char            **args;
+    char            *output;
+    int             status;
+    int             *pipe;
+    t_list          *lst_args;
     t_list          *outputs;
     t_list          *inputs;
     t_list          *errs;
+    struct s_cmd    *prev;
     struct s_cmd    *next;
 }               t_cmd;
 
@@ -70,8 +76,15 @@ typedef struct  s_table_cmd
 {
     t_tokens    *tokens;
     t_cmd       *ast;
+    char        *pipebuffer;
     bool        background;     
 }               t_table_cmd;
+
+typedef struct  s_redir
+{
+    char *file_path;
+    int fd;
+}               t_redir;
 
 typedef struct s_shell
 {
@@ -107,6 +120,7 @@ int tputs(const char *str, int affcnt, int (*putc)(int));
 void        init(t_shell *shell);
 t_tokens    *new_token();
 t_cmd       *new_cmd();
+t_redir     *new_redir();
 
 /*
  ** error.c
@@ -127,26 +141,23 @@ t_tokens *tokenization(char *cmd);
  * parser
  */
 
-//parser.c
 void    create_table(t_table_cmd *table, t_tokens *tokens, t_cmd *ast);
-
-// tokens.c
+void    resolve_args(t_cmd *cmds);
 void    parse_word(t_cmd *cmd, char *arg);
 void    parse_pipe(t_cmd **cmd);
-void    parse_less(t_cmd *cmd, t_tokens **tokens);
-void    parse_great(t_cmd *cmd, t_tokens **tokens);
-void    parse_twogreat(t_cmd *cmd, t_tokens **tokens);
+void    parse_redir(t_list **lst_redir, t_tokens **tokens);
 
 
 /*
  ** exec.c
 */
-int exec_cmd(char **tokens, char **env_path);
+int exec_cmds(t_cmd *cmds, int *prevfd);
 
 
 /*
  ** utils.c
 */
 char *find_bin_path(char *cmd, char **paths, int depth);
+void print_cmd(t_cmd *cmd);
 
 #endif

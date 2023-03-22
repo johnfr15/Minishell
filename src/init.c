@@ -82,16 +82,41 @@ t_cmd    *new_cmd()
     t_cmd *cmd = (t_cmd *) malloc(sizeof(t_cmd));
 
     if (cmd == NULL)
+    {
+        perror("new_cmd:");
         return (NULL);
+    }
 
     ft_memset(cmd, 0, sizeof(t_cmd));
 
+    cmd->bin_path = NULL;
     cmd->args = NULL;
+    cmd->output = NULL;
+    cmd->status = 0;
+    cmd->pipe = NULL;
+    cmd->lst_args = NULL;
     cmd->outputs = NULL;
     cmd->inputs = NULL;
     cmd->errs = NULL;
-    cmd->bin_path = NULL;
+    cmd->prev = NULL;
     cmd->next = NULL;
 
     return (cmd);
+}
+
+t_redir *new_redir()
+{
+    t_redir *redir = (t_redir *) malloc( sizeof(t_redir) );
+
+    if (redir == NULL)
+    {
+        perror("new_cmd:");
+        return (NULL);
+    }
+
+    ft_memset( redir, 0, sizeof(t_redir) );
+
+    redir->file_path = NULL;
+    redir->fd = -1;
+    return( redir );
 }

@@ -41,3 +41,50 @@ char *find_bin_path(char *cmd, char **paths, int depth)
 
     return ( find_bin_path(cmd, paths, depth + 1) );
 }
+
+void print_cmd(t_cmd *cmd)
+{
+    t_redir *redir;
+    int i;
+
+    printf("Path: %s\n", cmd->bin_path);
+
+    printf("args: ");
+    i = 0;
+    while (cmd->args[i])
+        printf("%s ", cmd->args[i++]);
+    printf("\n");
+    
+    printf("Outputs: ");
+    while (cmd->outputs)
+    {
+        redir = (t_redir *) cmd->outputs->content;
+        printf("%d ", redir->fd);
+        cmd->outputs = cmd->outputs->next;
+    }
+    printf("\n");
+
+    printf("Intputs: ");
+    while (cmd->inputs)
+    {
+        redir = (t_redir *) cmd->inputs->content;
+        printf("%d ", redir->fd);
+        cmd->inputs = cmd->inputs->next;
+    }
+    printf("\n");
+
+    printf("errs: ");
+    while (cmd->errs)
+    {
+        redir = (t_redir *) cmd->errs->content;
+        printf("%d ", redir->fd);
+        cmd->errs = cmd->errs->next;
+    }
+    printf("\n");
+
+
+    printf("prev: %p\n", cmd->prev);
+    printf("next: %p\n", cmd->next);
+    printf("\n\n");
+
+}

@@ -1,5 +1,7 @@
 CC = gcc
-SRC = $(addprefix ./src/, main.c init.c exec.c history.c lexer.c error.c )
+SRC = $(addprefix ./src/, main.c init.c history.c error.c utils.c) \
+	  $(addprefix ./src/parser/, lexer.c parser.c parse1.c parse2.c) \
+	  $(addprefix ./src/executor/, exec.c)
 OBJ	= ${SRC:%.c=%.o}
 LIBS = -L./libft/ -lft -lncurses
 LIBFT = ./libft/

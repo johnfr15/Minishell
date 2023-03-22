@@ -33,8 +33,9 @@ int main()
         
         shell.table->tokens = tokenization(shell.input);
         create_table(shell.table, shell.table->tokens, shell.table->ast);
+        resolve_args(shell.table->ast);
 
-        // exec_cmd(shell.tokens, shell.bin_path);
+        exec_cmds(shell.table->ast, NULL);
     }
     return (EXIT_SUCCESS);
 }
