@@ -121,6 +121,7 @@ void        init(t_shell *shell);
 t_tokens    *new_token();
 t_cmd       *new_cmd();
 t_redir     *new_redir();
+int         is_valid_input(char *input);
 
 /*
  ** error.c
