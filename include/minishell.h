@@ -142,7 +142,7 @@ t_tokens *tokenization(char *cmd);
  * parser
  */
 
-void    create_table(t_table_cmd *table, t_tokens *tokens, t_cmd *ast);
+void    create_table(t_tokens *tokens, t_cmd *ast);
 void    resolve_args(t_cmd *cmds);
 void    parse_word(t_cmd *cmd, char *arg);
 void    parse_pipe(t_cmd **cmd);
@@ -154,6 +154,10 @@ void    parse_redir(t_list **lst_redir, t_tokens **tokens);
 */
 int exec_cmds(t_cmd *cmds, int *prevfd);
 
+/*
+ ** clear
+*/
+    void clear_table(t_table_cmd *table);
 
 /*
  ** utils.c
