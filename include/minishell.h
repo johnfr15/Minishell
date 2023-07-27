@@ -67,7 +67,7 @@ typedef struct  s_tokens
 *
 * - out_file: the file that will receive the final output.
 *
-* - arr_file: the file where any errors ocurring during run time will write.
+* - err_file: the file where any errors ocurring during run time will write.
 *
 * - bacground: If the process need to be run in the background thus letting us
 *   to continue interact with the shell command
