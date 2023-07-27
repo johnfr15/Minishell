@@ -1,7 +1,10 @@
 #include "minishell.h"
 
-void create_table(t_table_cmd *table, t_tokens *tokens, t_cmd *ast)
+void create_table(t_table_cmd *table)
 {
+    t_tokens *tokens = table->tokens;
+    t_cmd *ast = table->ast;
+
     if (tokens == 0) return ;                 // Escape condition if tokens list is finnish
 
     int TOKEN = tokens->token;
