@@ -1,10 +1,7 @@
 #include "minishell.h"
 
-void create_table(t_table_cmd *table)
+void create_table(t_tokens *tokens, t_cmd *ast)
 {
-    t_tokens *tokens = table->tokens;
-    t_cmd *ast = table->ast;
-
     if (tokens == 0) return ;                 // Escape condition if tokens list is finnish
 
     int TOKEN = tokens->token;
@@ -16,7 +13,7 @@ void create_table(t_table_cmd *table)
     if (TOKEN == GREATGREAT)    parse_redir(&ast->outputs, &tokens);
     if (TOKEN == TWOGREAT)      parse_redir(&ast->errs, &tokens);
 
-    create_table(table, tokens->next, ast);
+    create_table(tokens->next, ast);
 }
 
 void    resolve_args(t_cmd *cmds)
