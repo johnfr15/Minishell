@@ -88,3 +88,20 @@ void print_cmd(t_cmd *cmd)
     printf("\n\n");
 
 }
+
+int is_valid_input(char *input)
+{
+    int i;
+
+    if ( input == NULL ) return (0);
+
+    i = 0;
+    while ( input[i] )
+    {
+        if ( input[i] != ' ')
+            return (1);
+        i++;
+    }
+
+    return (0);
+}
