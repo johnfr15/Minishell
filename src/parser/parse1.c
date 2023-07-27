@@ -26,3 +26,9 @@ void    parse_pipe(t_cmd **lst_cmds)
     *lst_cmds = cmd->next;
 }
 
+void    parse_builtin(t_cmd *cmd, char *arg)
+{
+    cmd->bin_path = arg;
+    cmd->lst_args = ft_lstnew( cmd->bin_path );
+    cmd->is_builtin = true;
+}

@@ -44,6 +44,7 @@ typedef struct  s_cmd
     char            *output;
     int             status;
     int             *pipe;
+    bool            is_builtin;
     t_list          *lst_args;
     t_list          *outputs;
     t_list          *inputs;
@@ -100,6 +101,10 @@ typedef struct s_shell
 }              t_shell;
 t_shell shell;
 
+/*
+ ** Built-in
+*/
+int cd(t_cmd *cmd, char *cwd);
 
 /*
  ** termcap.c
@@ -141,9 +146,9 @@ t_tokens *tokenization(char *cmd);
 /**
  * parser
  */
-
 void    create_table(t_tokens *tokens, t_cmd *ast);
 void    resolve_args(t_cmd *cmds);
+void    parse_builtin(t_cmd *cmd, char *arg);
 void    parse_word(t_cmd *cmd, char *arg);
 void    parse_pipe(t_cmd **cmd);
 void    parse_redir(t_list **lst_redir, t_tokens **tokens);
@@ -152,12 +157,13 @@ void    parse_redir(t_list **lst_redir, t_tokens **tokens);
 /*
  ** exec.c
 */
-int exec_cmds(t_cmd *cmds, int *prevfd);
+int exec_cmds(t_cmd *cmds);
+void exec_builtin(t_shell *cmd);
 
 /*
  ** clear
 */
-    void clear_table(t_table_cmd *table);
+void clear_table(t_table_cmd *table);
 
 /*
  ** utils.c

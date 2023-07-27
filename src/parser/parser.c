@@ -6,6 +6,7 @@ void create_table(t_tokens *tokens, t_cmd *ast)
 
     int TOKEN = tokens->token;
 
+    if (TOKEN == BUILTIN)       parse_builtin(ast, tokens->arg);
     if (TOKEN == WORD)          parse_word(ast, tokens->arg);
     if (TOKEN == PIPE)          parse_pipe(&ast);
     if (TOKEN == LESS)          parse_redir(&ast->outputs, &tokens);

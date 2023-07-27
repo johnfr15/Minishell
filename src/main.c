@@ -28,15 +28,22 @@ int main()
 
     while (1)
     {
+        // Get the input from user
         if (prompt() == 0)
             continue;
         
+        // lexer and parser
         shell.table->tokens = tokenization(shell.input);
         create_table(shell.table->tokens, shell.table->ast);
         resolve_args(shell.table->ast);
+        
+        // Execute 
+        if (shell.table->ast->is_builtin)
+            exec_builtin(&shell);
+        else
+            exec_cmds(shell.table->ast);
 
-        exec_cmds(shell.table->ast, NULL);
-
+        // Clear everything
         clear_table(shell.table);
     }
     return (EXIT_SUCCESS);

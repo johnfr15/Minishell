@@ -8,7 +8,8 @@ enum Token {
     LESS,
     GREAT,
     GREATGREAT,
-    TWOGREAT, 
+    TWOGREAT,
+    BUILTIN,
 };
 
 #endif

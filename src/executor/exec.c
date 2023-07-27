@@ -1,86 +1,24 @@
 #include "minishell.h"
 
-// /**
-//  * @name: Outputs redirection
-//  * @dev: Redirect the outputs in the different files specified for the current command.
-//  * @outputs: Linked list of all the redirections.
-//  * @from: File descriptor where the output of the command is written.
-//  *
-//  * @notice: If from is null then set the file descriptor to default standard output (1)
-//  */
-// static void out_redir(t_list *outputs, int *from)
-// {
-//     t_list *tmp;
-//     t_redir *redir;
-//     int fd;
-//     char buffer[1024];
-    
-//     fd = from ? from[0] : 1;
-//     while ( outputs && (read(fd, buffer, 1024) != EOF) )
-//     {
-//         tmp = outputs;
-//         while (tmp)
-//         {
-//             redir = (t_redir *)tmp->content;
-//             write(redir->fd, &buffer, 1024);
-//             tmp = tmp->next;
-//         }
-//     }
-// }
-
-// /**
-//  * @name: Inputs redirection
-//  * @dev: Redirect the inputs to the current command.
-//  * @inputs: Linked list of all the redirections.
-//  */
-// static void in_redir(t_list *inputs)
-// {
-//     t_redir *redir;
-//     int fd;
-    
-//     while ( inputs  )
-//     {
-//         redir = (t_redir *) inputs->content;
-//         fd = dup2(redir->fd, STDIN_FILENO);
-
-//         if (fd < 0)
-//             perror("Error redirecting to file");
-//         if (fd > 0) 
-//             close(redir->fd);
-
-//         inputs = inputs->next;
-//     }
-// }
-
-// static void read_from_pipe(int *from)
-// {
-//     if (from)
-//     {
-//         dup2(from[0], STDIN_FILENO);
-//     }
-// }
-
-// static void write_to_pipe(int *to)
-// {
-//     if (to)
-//     {
-//         dup2(to[1], STDOUT_FILENO);
-//         close(to[1]);
-//     }
-// }
-
-// static void exec(t_cmd *cmds)
-// {
-//     in_redir(cmds->inputs);
-//     read_from_pipe(cmds->from);
-//     write_to_pipe(cmds->to);
-
-//     execve(cmds->bin_path, cmds->args, environ);
-//     exit(1);
-// }
-static void exec(t_cmd *cmds, int *currfd, int *prevfd)
+static int *new_pipe()
 {
-    close(currfd[0]);
+    int *fds = (int *) malloc(sizeof(int) * 2);
+    if ( pipe(fds) < 0 )
+    {
+        free(fds);
+        return NULL;
+    }
+    return (fds);
+}
+
+static void exec_redirection(t_cmd *cmd, int *prevfd)
+{
+    int         *fds;
+
+    if ( (fds = new_pipe()) == NULL)
+        return ;
+
+    close(fds[0]);
 
     if (prevfd)
     {
@@ -89,68 +27,41 @@ static void exec(t_cmd *cmds, int *currfd, int *prevfd)
         free(prevfd);
     }
     
-    if (cmds->next)
+    if (cmd->next)
     {
-        dup2(currfd[1], STDOUT_FILENO);
-        close(currfd[1]);
+        dup2(fds[1], STDOUT_FILENO);
+        close(fds[1]);
     }
 
-    execve(cmds->bin_path, cmds->args, environ);
-    exit(1);
+    execve(cmd->bin_path, cmd->args, environ);
+    exit(0);
 }
 
-// int exec_cmds(t_cmd *cmds)
-// {
-//     int status = 0;
-//     pid_t pid;
-    
-//     if ( (pid = fork()) < 0 )
-//     {
-//         perror("fork");
-//         return (1);
-//     }
-    
-//     if (pid == 0)
-//         exec(cmds);
-//     else
-//         wait(&status);
-
-//     // printf("cmd: %s\n\n", cmds->bin_path);
-//     out_redir(cmds->outputs, cmds->to);
-
-//     return ( status );
-// }
- 
-int exec_cmds(t_cmd *cmd, int *prevfd)
+int exec_cmds(t_cmd *cmds)
 {
     pid_t       pid;
-    int         *fd;
 
-    fd = (int *) malloc(sizeof(int) * 2);
-    if ( pipe(fd) < 0 )
-    {
-        free(fd);
-        return (1);
-    }
     if ( (pid = fork()) < 0 )
         return (1);
     
     // if buffer write to the read end of new file descriptor
     if (pid == 0)
-        exec(cmd, fd, prevfd);
-
-    wait(&cmd->status);
-    char str[] = "Hello";
-
-    write(fd[1], str, 5);
-    close(fd[1]);
-    
-    if (cmd->next)
-        return ( exec_cmds(cmd->next, fd) );
-    else
     {
-        close(fd[0]);
-        free(fd);
-        return ( cmd->status );
+        if ( cmds->outputs || cmds->inputs || cmds->errs )
+            exec_redirection(cmds, NULL);
+        else
+            execve( cmds->bin_path, cmds->args, environ );
     }
+    wait(&cmds->status);
+
+    if (cmds->next)
+        return ( exec_cmds(cmds->next) );
+    else
+        return ( cmds->status );
+}
+
+void exec_builtin(t_shell *shell)
+{
+    if ( ft_strcmp(shell->table->ast->bin_path, "cd") == 0 ) cd(shell->table->ast, shell->cwd);
+    if ( ft_strcmp(shell->table->ast->bin_path, "exit") == 0 ) exit(0);
 }

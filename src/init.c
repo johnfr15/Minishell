@@ -51,7 +51,7 @@ static t_table_cmd *init_table_cmd()
     return table;
 }
 
-void init(t_shell *shell)
+void    init(t_shell *shell)
 {
     shell->cwd = init_cwd();
     shell->user = getenv("USER");
@@ -94,6 +94,7 @@ t_cmd    *new_cmd()
     cmd->output = NULL;
     cmd->status = 0;
     cmd->pipe = NULL;
+    cmd->is_builtin = false;
     cmd->lst_args = NULL;
     cmd->outputs = NULL;
     cmd->inputs = NULL;
