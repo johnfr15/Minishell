@@ -22,8 +22,12 @@ int prompt(void)
     return (0);
 }
 
-int main()
+int main(int argc, char **argv, char **environ)
 {
+    (void)argc;
+    (void)argv;
+    (void)environ;
+
     init(&shell);
 
     while (1)
@@ -34,6 +38,7 @@ int main()
         
         // lexer and parser
         shell.table->tokens = tokenization(shell.input);
+        resolve_meta_char(shell.table->tokens);
         create_table(shell.table->tokens, shell.table->ast);
         resolve_args(shell.table->ast);
         

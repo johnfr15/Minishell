@@ -32,3 +32,20 @@ void    parse_builtin(t_cmd *cmd, char *arg)
     cmd->lst_args = ft_lstnew( cmd->bin_path );
     cmd->is_builtin = true;
 }
+
+void    parse_env(t_cmd *cmd, char *arg)
+{
+    char *env = getenv(arg + 1);
+    t_list *new;
+
+    if ( cmd->bin_path == NULL )
+    {
+        cmd->bin_path = find_bin_path( env, shell.bin_paths, 0 );;
+        cmd->lst_args = ft_lstnew( cmd->bin_path );
+    }
+    else
+    {
+        new = ft_lstnew( env );
+        ft_lstadd_back( &cmd->lst_args, new );
+    }
+}

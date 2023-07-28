@@ -17,10 +17,10 @@ t_tokens *tokenization(char *cmd)
         else if (ft_strcmp(tokens[i], ">>") == 0) tmp->token = GREATGREAT;
         else if (ft_strcmp(tokens[i], "2>") == 0) tmp->token = TWOGREAT;
         // Built-in 
-        else if (ft_strcmp(tokens[i], "cd") == 0) tmp->token = BUILTIN;
-        else if (ft_strcmp(tokens[i], "exit") == 0) tmp->token = BUILTIN;
+        else if (ft_strcmp(tokens[i], "cd") == 0)     tmp->token = BUILTIN;
+        else if (ft_strcmp(tokens[i], "exit") == 0)   tmp->token = BUILTIN;
         else if (ft_strcmp(tokens[i], "export") == 0) tmp->token = BUILTIN;
-        else if (ft_strcmp(tokens[i], "unset") == 0) tmp->token = BUILTIN;
+        else if (ft_strcmp(tokens[i], "unset") == 0)  tmp->token = BUILTIN;
         // Others
         else if (*tokens[i] >= 32 && *tokens[i] <= 126) tmp->token = WORD;
         // Error

@@ -10,6 +10,7 @@ enum Token {
     GREATGREAT,
     TWOGREAT,
     BUILTIN,
+    ENV,
 };
 
 #endif

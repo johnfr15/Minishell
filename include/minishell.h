@@ -148,10 +148,12 @@ t_tokens *tokenization(char *cmd);
  */
 void    create_table(t_tokens *tokens, t_cmd *ast);
 void    resolve_args(t_cmd *cmds);
+void    resolve_meta_char(t_tokens *tokens);
 void    parse_builtin(t_cmd *cmd, char *arg);
 void    parse_word(t_cmd *cmd, char *arg);
 void    parse_pipe(t_cmd **cmd);
 void    parse_redir(t_list **lst_redir, t_tokens **tokens);
+void    parse_env(t_cmd *cmd, char *arg);
 
 
 /*
