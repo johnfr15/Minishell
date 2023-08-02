@@ -40,7 +40,8 @@ void    resolve_meta_char(t_tokens *tokens)
 
     while (token[i])
     {
-        if (token[i] == '$') tokens->arg = resolve_env(token);
+        if (ft_strcmp(token[i], "$?") == 0) tokens->arg = SHELL->exitstatus;
+        else if (token[i] == '$') tokens->arg = resolve_env(token);
         i++;
     }
 
