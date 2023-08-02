@@ -42,11 +42,8 @@ int main(int argc, char **argv, char **environ)
         create_table(SHELL.table->tokens, SHELL.table->ast);
         resolve_args(SHELL.table->ast);
         
-        // Execute 
-        if (SHELL.table->ast->is_builtin)
-            exec_builtin(&SHELL);
-        else
-            exec_cmds(SHELL.table->ast);
+        // Execute
+        exec(SHELL.table->ast);
 
         // Clear everything
         clear_table(SHELL.table);

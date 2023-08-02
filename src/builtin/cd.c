@@ -1,14 +1,14 @@
 #include "minishell.h"
 
-int cd(t_cmd *cmd, char *cwd)
+int cd(t_cmd cmd)
 {
-    if ( chdir(cmd->args[1]) != 0 )
+    if ( chdir(cmd.args[1]) != 0 )
     {
         perror("Error changing directory");
         return (1);
     }
-    cwd = getcwd(NULL, BUFFER_SIZE);
-    cwd = basename(cwd);
+    SHELL.cwd = getcwd(NULL, BUFFER_SIZE);
+    SHELL.cwd = basename(SHELL.cwd);
 
     return (0);
 }

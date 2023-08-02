@@ -11,7 +11,7 @@ static int *new_pipe()
     return (fds);
 }
 
-static void exec_redirection(t_cmd *cmd, int *prevfd)
+static void exec_redirection(t_cmd cmd, int *prevfd)
 {
     int         *fds;
 
@@ -27,46 +27,54 @@ static void exec_redirection(t_cmd *cmd, int *prevfd)
         free(prevfd);
     }
     
-    if (cmd->next)
+    if (cmd.next)
     {
         dup2(fds[1], STDOUT_FILENO);
         close(fds[1]);
     }
 
-    execve(cmd->bin_path, cmd->args, environ);
+    execve(cmd.bin_path, cmd.args, environ);
     exit(0);
 }
 
-int exec_cmds(t_cmd *cmds)
+static void exec_cmd(t_cmd cmd)
 {
     pid_t       pid;
 
-    if ( (pid = fork()) < 0 )
-        return (1);
+    pid = fork();
     
     // if buffer write to the read end of new file descriptor
     if (pid == 0)
     {
-        if ( cmds->outputs || cmds->inputs || cmds->errs )
-            exec_redirection(cmds, NULL);
+        if ( cmd.outputs || cmd.inputs || cmd.errs )
+            exec_redirection(cmd, NULL);
         else
-            execve( cmds->bin_path, cmds->args, environ );
+            execve( cmd.bin_path, cmd.args, environ );
     }
-    wait(&cmds->status);
-
-    if (cmds->next)
-        return ( exec_cmds(cmds->next) );
-    else
-        return ( cmds->status );
+    wait(&cmd.status);
+    SHELL.exitstatus = WIFEXITED(cmd.status) ? WEXITSTATUS(cmd.status) : -1;
 }
 
-void exec_builtin(t_shell *SHELL)
+static void exec_builtin(t_cmd cmd)
 {
-    if ( ft_strcmp(SHELL->table->ast->bin_path, "echo") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
-    if ( ft_strcmp(SHELL->table->ast->bin_path, "cd") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
-    if ( ft_strcmp(SHELL->table->ast->bin_path, "pwd") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
-    if ( ft_strcmp(SHELL->table->ast->bin_path, "export") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
-    if ( ft_strcmp(SHELL->table->ast->bin_path, "unset") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
-    if ( ft_strcmp(SHELL->table->ast->bin_path, "env") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
-    if ( ft_strcmp(SHELL->table->ast->bin_path, "exit") == 0 ) exit(0);
+    // if ( ft_strcmp(cmd.bin_path, "echo") == 0 ) echo();
+    if ( ft_strcmp(cmd.bin_path, "cd") == 0 ) cd(cmd);
+    // if ( ft_strcmp(SHELL->table->ast->bin_path, "pwd") == 0 ) pwd();
+    // if ( ft_strcmp(SHELL->table->ast->bin_path, "export") == 0 ) export();
+    // if ( ft_strcmp(SHELL->table->ast->bin_path, "unset") == 0 ) unset();
+    // if ( ft_strcmp(SHELL->table->ast->bin_path, "env") == 0 ) env();
+    if ( ft_strcmp(cmd.bin_path, "exit") == 0 ) exit(0);
+}
+
+void exec(t_cmd *cmds)
+{
+    while (cmds)
+    {
+        // print_cmd(cmds);
+
+        if (cmds->is_builtin)   exec_builtin(*cmds);
+        else                    exec_cmd(*cmds);
+
+        cmds = cmds->next;
+    }
 }

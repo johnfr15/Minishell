@@ -64,12 +64,6 @@ typedef struct  s_tokens
 * - ast: (abstract syntax tree) is the tree of commands that will be executed
 *   it is build with the tokens generated vy the lexer.
 *
-* - in_file: the starting file argument used by the first command.
-*
-* - out_file: the file that will receive the final output.
-*
-* - err_file: the file where any errors ocurring during run time will write.
-*
 * - bacground: If the process need to be run in the background thus letting us
 *   to continue interact with the shell command
 */
@@ -96,7 +90,7 @@ typedef struct s_shell
     char        *input;
     t_hist      *history;
     t_table_cmd *table;
-    int         exitstatus,
+    int         exitstatus;
     struct termios *termios;
 
 }              t_shell;
@@ -106,7 +100,8 @@ t_shell SHELL;
 /*
  ** Built-in
 */
-int cd(t_cmd *cmd, char *cwd);
+int cd(t_cmd cmd);
+int echo(char *str, char flag);
 
 /*
  ** termcap.c
@@ -157,12 +152,10 @@ void    parse_pipe(t_cmd **cmd);
 void    parse_redir(t_list **lst_redir, t_tokens **tokens);
 void    parse_env(t_cmd *cmd, char *arg);
 
-
 /*
  ** exec.c
 */
-int exec_cmds(t_cmd *cmds);
-void exec_builtin(t_shell *cmd);
+void exec(t_cmd *cmds);
 
 /*
  ** clear
