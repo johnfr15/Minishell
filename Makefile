@@ -3,7 +3,7 @@ SRC = $(addprefix ./src/, main.c init.c history.c error.c utils.c) \
 	  $(addprefix ./src/parser/, lexer.c resolver.c parser.c parse1.c parse2.c) \
 	  $(addprefix ./src/executor/, exec.c) \
 	  $(addprefix ./src/clear/, clear.c) \
-	  $(addprefix ./src/builtin/, builtin.c)
+	  $(addprefix ./src/builtin/, cd.c echo.c)
 OBJ	= ${SRC:%.c=%.o}
 LIBS = -L./libft/ -lft -lncurses
 LIBFT = ./libft/

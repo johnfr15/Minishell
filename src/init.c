@@ -51,16 +51,17 @@ static t_table_cmd *init_table_cmd()
     return table;
 }
 
-void    init(t_shell *shell)
+void    init(t_shell *SHELL)
 {
-    shell->cwd = init_cwd();
-    shell->user = getenv("USER");
-    shell->hostname = init_hostname();
-    shell->input = init_input();
-    shell->history = init_history();
-    shell->bin_paths = init_bin_path();
-    shell->table = init_table_cmd();
-    tcgetattr(STDIN_FILENO, shell->termios);
+    SHELL->cwd = init_cwd();
+    SHELL->user = getenv("USER");
+    SHELL->hostname = init_hostname();
+    SHELL->input = init_input();
+    SHELL->history = init_history();
+    SHELL->bin_paths = init_bin_path();
+    SHELL->table = init_table_cmd();
+    SHELL->exitstatus = 0;
+    tcgetattr(STDIN_FILENO, SHELL->termios);
 }
 
 t_tokens    *new_token()

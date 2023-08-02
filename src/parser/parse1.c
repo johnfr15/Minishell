@@ -6,7 +6,7 @@ void    parse_word(t_cmd *cmd, char *arg)
 
     if ( cmd->bin_path == NULL )
     {
-        cmd->bin_path = find_bin_path( arg, shell.bin_paths, 0 );
+        cmd->bin_path = find_bin_path( arg, SHELL.bin_paths, 0 );
         cmd->lst_args = ft_lstnew( cmd->bin_path );
     }
     else
@@ -40,7 +40,7 @@ void    parse_env(t_cmd *cmd, char *arg)
 
     if ( cmd->bin_path == NULL )
     {
-        cmd->bin_path = find_bin_path( env, shell.bin_paths, 0 );;
+        cmd->bin_path = find_bin_path( env, SHELL.bin_paths, 0 );;
         cmd->lst_args = ft_lstnew( cmd->bin_path );
     }
     else

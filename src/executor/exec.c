@@ -60,13 +60,13 @@ int exec_cmds(t_cmd *cmds)
         return ( cmds->status );
 }
 
-void exec_builtin(t_shell *shell)
+void exec_builtin(t_shell *SHELL)
 {
-    if ( ft_strcmp(shell->table->ast->bin_path, "echo") == 0 ) cd(shell->table->ast, shell->cwd);
-    if ( ft_strcmp(shell->table->ast->bin_path, "cd") == 0 ) cd(shell->table->ast, shell->cwd);
-    if ( ft_strcmp(shell->table->ast->bin_path, "pwd") == 0 ) cd(shell->table->ast, shell->cwd);
-    if ( ft_strcmp(shell->table->ast->bin_path, "export") == 0 ) cd(shell->table->ast, shell->cwd);
-    if ( ft_strcmp(shell->table->ast->bin_path, "unset") == 0 ) cd(shell->table->ast, shell->cwd);
-    if ( ft_strcmp(shell->table->ast->bin_path, "env") == 0 ) cd(shell->table->ast, shell->cwd);
-    if ( ft_strcmp(shell->table->ast->bin_path, "exit") == 0 ) exit(0);
+    if ( ft_strcmp(SHELL->table->ast->bin_path, "echo") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
+    if ( ft_strcmp(SHELL->table->ast->bin_path, "cd") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
+    if ( ft_strcmp(SHELL->table->ast->bin_path, "pwd") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
+    if ( ft_strcmp(SHELL->table->ast->bin_path, "export") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
+    if ( ft_strcmp(SHELL->table->ast->bin_path, "unset") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
+    if ( ft_strcmp(SHELL->table->ast->bin_path, "env") == 0 ) cd(SHELL->table->ast, SHELL->cwd);
+    if ( ft_strcmp(SHELL->table->ast->bin_path, "exit") == 0 ) exit(0);
 }

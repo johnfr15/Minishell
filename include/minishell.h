@@ -78,7 +78,7 @@ typedef struct  s_table_cmd
     t_tokens    *tokens;
     t_cmd       *ast;
     char        *pipebuffer;
-    bool        background;     
+    bool        background;
 }               t_table_cmd;
 
 typedef struct  s_redir
@@ -96,10 +96,12 @@ typedef struct s_shell
     char        *input;
     t_hist      *history;
     t_table_cmd *table;
+    int         exitstatus,
     struct termios *termios;
 
 }              t_shell;
-t_shell shell;
+
+t_shell SHELL;
 
 /*
  ** Built-in
@@ -122,7 +124,7 @@ int tputs(const char *str, int affcnt, int (*putc)(int));
 /*
  ** init.c
 */
-void        init(t_shell *shell);
+void        init(t_shell *SHELL);
 t_tokens    *new_token();
 t_cmd       *new_cmd();
 t_redir     *new_redir();

@@ -4,19 +4,19 @@ int prompt(void)
 {
     int input_l;
 
-    ft_bzero(shell.input, BUFFER_SIZE);
-    ft_printf(GREEN "%s@%s" RESET ":" RED "%s" RESET "$ ", shell.user, shell.hostname, shell.cwd);
+    ft_bzero(SHELL.input, BUFFER_SIZE);
+    ft_printf(GREEN "%s@%s" RESET ":" RED "%s" RESET "$ ", SHELL.user, SHELL.hostname, SHELL.cwd);
 
-    if ( (input_l = read(STDIN_FILENO, shell.input, BUFFER_SIZE)) == -1) {
+    if ( (input_l = read(STDIN_FILENO, SHELL.input, BUFFER_SIZE)) == -1) {
         perror("read");
         exit(EXIT_FAILURE);
     }
-    shell.input[input_l - 1] = '\0';
+    SHELL.input[input_l - 1] = '\0';
 
     // Execute cmd and refresh prompt's input
-    if ( is_valid_input(shell.input) )
+    if ( is_valid_input(SHELL.input) )
     {
-        shell.history = add_history(shell.history, shell.input);
+        SHELL.history = add_history(SHELL.history, SHELL.input);
         return (1);
     }
     return (0);
@@ -28,7 +28,7 @@ int main(int argc, char **argv, char **environ)
     (void)argv;
     (void)environ;
 
-    init(&shell);
+    init(&SHELL);
 
     while (1)
     {
@@ -37,19 +37,19 @@ int main(int argc, char **argv, char **environ)
             continue;
         
         // lexer and parser
-        shell.table->tokens = tokenization(shell.input);
-        resolve_meta_char(shell.table->tokens);
-        create_table(shell.table->tokens, shell.table->ast);
-        resolve_args(shell.table->ast);
+        SHELL.table->tokens = tokenization(SHELL.input);
+        resolve_meta_char(SHELL.table->tokens);
+        create_table(SHELL.table->tokens, SHELL.table->ast);
+        resolve_args(SHELL.table->ast);
         
         // Execute 
-        if (shell.table->ast->is_builtin)
-            exec_builtin(&shell);
+        if (SHELL.table->ast->is_builtin)
+            exec_builtin(&SHELL);
         else
-            exec_cmds(shell.table->ast);
+            exec_cmds(SHELL.table->ast);
 
         // Clear everything
-        clear_table(shell.table);
+        clear_table(SHELL.table);
     }
     return (EXIT_SUCCESS);
 }
